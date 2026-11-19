@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Trash for deleted notes</title>
+<title>The title of the page</title>
 <!--
-  spec-template.html: one file that makes a page for a spec, a code walk-through or a code review.
-  It works from a disk without a network. It loads nothing from another place.
+  doc-template.html: one file that makes a page for a spec, a code walk-through, a code review or
+  a report. It works from a disk without a network. It loads nothing from another place.
 
   How to use it
   1. Copy this file. Do not write the full file yourself: its end has 200 KB of font data.
@@ -22,6 +22,10 @@
     <pre data-title="src/Program.cs">                     shows a file name above the code
     Languages with colors: js ts cs py go rust java kotlin c cpp sql sh json yaml toml css html xml
     diff dockerfile. A block with a different language, or without one, stays in one color.
+
+  Versions in tabs
+    <div class="tabs"> with two or more children, each with data-tab="Current", data-tab="Proposed".
+    The page shows one child at a time and makes the buttons. Use it to compare long code blocks.
 
   Colors follow the system (light or dark). To change the look, change the variables in :root.
 -->
@@ -74,7 +78,7 @@ p, li, dd { max-width: 74ch; }
 ul, ol { padding-left: 1.3em; }
 li + li, li > :is(ul, ol) { margin-top: 6px; }
 a { color: var(--accent); }
-a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a:focus-visible, summary:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 hr { border: 0; border-top: 1px solid var(--line); margin-block: 32px; }
 blockquote { margin-inline: 0; padding: 2px 0 2px 16px; border-left: 3px solid var(--line-strong); color: var(--muted); }
 mark { background: var(--warn-soft); color: inherit; padding: 0 0.2em; border-radius: 2px; }
@@ -117,6 +121,10 @@ table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
 th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
 tr:last-child td { border-bottom: 0; }
 th { font-family: var(--display); font-weight: 600; background: var(--surface-2); white-space: nowrap; }
+/* Inline code can break at each character, so that a long name does not push a paragraph wider
+   than a phone. In a table that rule cuts each name in two, because a cell takes the smallest
+   width it can. A table scrolls in its box, so a name there stays in one piece. */
+table code { overflow-wrap: normal; white-space: nowrap; }
 
 /* ---- tags: a short state next to a heading, in a table or in the meta line ---- */
 .tag { display: inline-block; font-family: var(--mono); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.04em; padding: 1px 7px; border-radius: 3px; white-space: nowrap; background: var(--surface-2); color: var(--muted); vertical-align: 0.1em; }
@@ -141,6 +149,28 @@ summary { cursor: pointer; font-family: var(--display); font-weight: 600; font-s
 .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; align-items: start; }
 .cols > * { min-width: 0; margin: 0; }
 
+/* ---- tabs: two or more versions of one thing, one at a time ---- */
+/* The script makes the buttons from the data-tab names of the children. Without the script, and on
+   paper, the children show below each other. */
+.tabs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.tabs > * { margin: 0; min-width: 0; }
+/* "Side by side": the children go next to each other when the page is wide enough. */
+.tabs.all { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+/* The negative margin takes away the gap of the grid and one more pixel, so the buttons sit on
+   the top line of the block below them. */
+.tab-bar { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: -15px; position: relative; }
+.tab-bar button, .tabs-all button { font-family: var(--mono); font-size: 0.74rem; line-height: 1.4; padding: 5px 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); cursor: pointer; }
+.tab-bar button { border-radius: 4px 4px 0 0; }
+.tab-bar button:hover, .tabs-all button:hover { color: var(--fg); }
+.tab-bar button[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: inset 0 2px 0 var(--accent); }
+/* The block below the first button has no round corner there. With one block in view, that block
+   can be each child. */
+.tab-bar + *, .tabs:not(.all) > .tab-bar ~ * { border-top-left-radius: 0; }
+/* <p class="tabs-all"></p> gets buttons that change all tabs of the page. It must be empty. */
+.tabs-all { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--muted); }
+.tabs-all:empty { display: none; }
+.tabs-all button { border-radius: 3px; padding: 3px 9px; }
+
 /* ---- diagrams: inline SVG that takes its colors from the page ---- */
 figure { margin-inline: 0; }
 figure .scroll { padding: 8px; }
@@ -161,169 +191,263 @@ figcaption { font-size: 0.88rem; color: var(--muted); max-width: 80ch; }
   pre { white-space: pre-wrap; }
   h2, h3 { break-after: avoid; }
   pre, .callout, .finding, figure, tr { break-inside: avoid; }
+  /* Paper has no buttons, so it shows each version. */
+  .tab-bar, .tabs-all { display: none; }
+  .tabs > [hidden] { display: block; }
 }
 </style>
 </head>
 <body>
 <main class="page">
 
-  <!-- The start of the page: what it is, the title, the subject in one or two sentences, the state. -->
+  <!-- The start of the page: the kind of page, the title, the subject in one or two sentences, the state. -->
   <header>
-    <p class="eyebrow">Spec · Notes app</p>
-    <h1>Trash for deleted notes</h1>
-    <p class="lede">A deleted note goes to a trash and stays there for 30 days. In that time the owner can get it back. After 30 days the server removes it.</p>
-    <p class="meta"><span class="tag warn">draft</span><span>2026-11-18</span><span>owner: backend</span></p>
+    <p class="eyebrow">Kind of page · Project</p>
+    <h1>The title of the page</h1>
+    <p class="lede">The lede says in one or two sentences what the page is about. This page is the catalog of the elements: each example says what the element is for.</p>
+    <p class="meta"><span class="tag warn">draft</span><span>2026-11-19</span><span>author: name</span></p>
   </header>
 
   <!-- Links to the sections. Use it when the page has more than four sections. -->
   <nav class="toc" aria-label="Contents">
-    <a href="#goal">Goal</a><a href="#rules">Rules</a><a href="#data">Data</a><a href="#api">API</a><a href="#review">Review</a><a href="#open">Open points</a>
+    <a href="#text">Text</a><a href="#tables">Tables and tags</a><a href="#boxes">Boxes</a><a href="#code">Code</a><a href="#findings">Findings</a><a href="#diagrams">Diagrams</a>
   </nav>
 
-  <section id="goal">
-    <h2>Goal</h2>
-    <p>Today <code>DELETE /notes/{id}</code> removes the row at once, and a wrong click loses the note. This change keeps the row and sets a time in <code>deleted_at</code>.</p>
+  <section id="text">
+    <h2>Text</h2>
+    <p>A section starts with an <code>h2</code>, which has a line above it. A paragraph is not wider than 74 characters, because long lines are hard to read. Inside a sentence you can use <b>bold</b> for a term, <code>code</code> for a name from the source, <mark>a mark</mark> for words that changed, <kbd>Ctrl</kbd> + <kbd>S</kbd> for keys, and <a href="#code">a link</a>.</p>
+
+    <h3>A heading of the third level</h3>
+    <p>It names one part of a section.</p>
+    <h4>A heading of the fourth level</h4>
+    <p>It is the smallest heading. A page that needs a fifth level is too deep.</p>
+
+    <h3>Lists</h3>
     <ul>
-      <li>The owner can restore a note for 30 days.</li>
-      <li>A deleted note is not in the list and not in the search.
-        <ul><li>The count of notes in the sidebar ignores it too.</li></ul>
+      <li>A list without numbers is for points of equal weight.</li>
+      <li>A point can have a list inside.
+        <ul><li>The inner list has less space around it.</li></ul>
       </li>
-      <li>The shortcut <kbd>Ctrl</kbd> + <kbd>Z</kbd> restores the last deleted note.</li>
     </ul>
-    <!-- A callout is for the one remark that the reader must not miss. The classes ok, warn and bad change its color. -->
-    <div class="callout warn">
-      <p><b>Not in this change:</b> the trash of shared notebooks. A shared note has more than one owner, and that needs its own rules.</p>
-    </div>
+    <ol>
+      <li>A list with numbers is for steps.</li>
+      <li>It is also for points that a reader refers to: "see point 2".</li>
+    </ol>
+    <dl>
+      <dt>A term</dt><dd>A definition list is for terms and their meanings, or for names and their values.</dd>
+      <dt>A second term</dt><dd>The meaning has the muted color.</dd>
+    </dl>
+
+    <h3>Quote, note and line</h3>
+    <blockquote><p>A quote is for the words of a different person or document. Name the source in the sentence before it.</p></blockquote>
+    <p class="note">A note is small and muted. It is for a detail of low weight, for example the source of a number.</p>
+    <hr>
+    <p>The line above is an <code>hr</code>. It separates two parts that have no heading.</p>
   </section>
 
-  <section id="rules">
-    <h2>Rules</h2>
-    <!-- A table needs no class. Tags show a state: plain, ok, warn, bad, accent. -->
+  <section id="tables">
+    <h2>Tables and tags</h2>
+    <p>A table needs no class. On a narrow screen it scrolls sideways inside its box, and the page stays in place. A tag is a short state: in a table, next to a heading, or in the line below the title.</p>
     <table>
-      <thead><tr><th>Id</th><th>Rule</th><th>State</th></tr></thead>
+      <thead><tr><th>Tag</th><th>Markup</th><th>Use</th></tr></thead>
       <tbody>
-        <tr><td>R1</td><td>A delete sets <code>deleted_at</code> and keeps the row.</td><td><span class="tag ok">agreed</span></td></tr>
-        <tr><td>R2</td><td>The list and the search show only rows where <code>deleted_at</code> is empty.</td><td><span class="tag ok">agreed</span></td></tr>
-        <tr><td>R3</td><td>A job removes the rows that are older than 30 days.</td><td><span class="tag warn">open</span></td></tr>
-        <tr><td>R4</td><td>A restore of a note with a deleted notebook makes the notebook again.</td><td><span class="tag bad">rejected</span></td></tr>
-        <tr><td>R5</td><td>The trash has a button that removes all notes at once.</td><td><span class="tag">later</span></td></tr>
+        <tr><td><span class="tag">later</span></td><td><code>class="tag"</code></td><td>A state without a judgement.</td></tr>
+        <tr><td><span class="tag ok">done</span></td><td><code>class="tag ok"</code></td><td>A good or finished state.</td></tr>
+        <tr><td><span class="tag warn">open</span></td><td><code>class="tag warn"</code></td><td>A state that needs attention or a decision.</td></tr>
+        <tr><td><span class="tag bad">blocked</span></td><td><code>class="tag bad"</code></td><td>A wrong or refused state.</td></tr>
+        <tr><td><span class="tag accent">new</span></td><td><code>class="tag accent"</code></td><td>A highlight in the accent color.</td></tr>
       </tbody>
     </table>
   </section>
 
-  <section id="data">
-    <h2>Data</h2>
-    <p>One new column and one index. The index contains only the deleted rows, so it stays small.</p>
-    <!-- data-title shows a file name above the code. -->
-    <pre data-title="migrations/0042_trash.sql"><code class="language-sql">ALTER TABLE notes ADD COLUMN deleted_at timestamp NULL;
+  <section id="boxes">
+    <h2>Boxes</h2>
+    <h3>Callouts</h3>
+    <!-- A callout is for a remark that the reader must not miss. The classes ok, warn and bad change the color of its edge. -->
+    <div class="callout">
+      <p><b>A callout</b> is for a remark that the reader must not miss. When a page has many callouts, the reader ignores them, so use few.</p>
+    </div>
+    <div class="callout ok"><p><b>callout ok</b> is for a good result or a decision that is made.</p></div>
+    <div class="callout warn"><p><b>callout warn</b> is for a risk, a limit, or a thing that is out of scope.</p></div>
+    <div class="callout bad"><p><b>callout bad</b> is for a failure or a reason to stop.</p></div>
 
--- Only the deleted rows are in the index.
-CREATE INDEX notes_trash ON notes (owner_id, deleted_at)
-    WHERE deleted_at IS NOT NULL;
-
-SELECT id, title FROM notes
-WHERE owner_id = 42 AND deleted_at &lt; now() - interval '30 days';</code></pre>
-
-    <figure>
-      <div class="scroll">
-        <svg viewBox="0 0 700 110" role="img" aria-label="A note goes from active to trash, and from trash back to active or to removed.">
-          <defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="currentColor"/></marker></defs>
-          <rect class="s-ok" x="20" y="35" width="150" height="44" rx="4"/><text class="s-text" x="95" y="62" text-anchor="middle">active</text>
-          <rect class="s-accent" x="275" y="35" width="150" height="44" rx="4"/><text class="s-text" x="350" y="62" text-anchor="middle">in the trash</text>
-          <rect class="s-miss" x="530" y="35" width="150" height="44" rx="4"/><text class="s-text" x="605" y="62" text-anchor="middle">removed</text>
-          <path class="s-arrow" d="M170 48H275" marker-end="url(#tip)"/><text class="s-muted" x="222" y="40" text-anchor="middle">delete</text>
-          <path class="s-arrow" d="M275 68H170" marker-end="url(#tip)"/><text class="s-muted" x="222" y="86" text-anchor="middle">restore</text>
-          <path class="s-arrow" d="M425 57H530" marker-end="url(#tip)"/><text class="s-muted" x="477" y="49" text-anchor="middle">after 30 days</text>
-        </svg>
-      </div>
-      <figcaption>The states of a note. Only the job moves a note to "removed".</figcaption>
-    </figure>
-  </section>
-
-  <section id="api">
-    <h2>API</h2>
-    <h3>Restore a note</h3>
-    <p>The endpoint answers 404 for a note that is not in the trash, so a second call does no harm.</p>
-    <pre data-title="src/Notes/TrashEndpoints.cs"><code class="language-cs">// Restores one note. Only the owner can do it.
-app.MapPost("/notes/{id}/restore", async (Guid id, ClaimsPrincipal user, NotesDb db) =>
-{
-    var note = await db.Notes.FirstOrDefaultAsync(n => n.Id == id &amp;&amp; n.OwnerId == user.Id());
-    if (note is not { DeletedAt: not null }) return Results.NotFound();
-
-    note.DeletedAt = null;
-    await db.SaveChangesAsync();
-    return Results.Ok(new NoteDto(note.Id, note.Title, DaysLeft: 30));
-});
-
-public sealed record NoteDto(Guid Id, string Title, int DaysLeft);</code></pre>
-
-    <h3>The answer and the client</h3>
-    <!-- .cols puts blocks side by side: two versions, request and answer, before and after. -->
+    <h3>Blocks side by side</h3>
+    <!-- .cols puts blocks side by side: before and after, request and answer, two options. -->
     <div class="cols">
-      <pre data-title="answer"><code class="language-json">{
-  "id": "7c1f0a52",
-  "title": "Shopping",
-  "daysLeft": 30,
-  "shared": false
-}</code></pre>
-      <pre data-title="web/trash.ts"><code class="language-ts">type Note = { id: string; title: string; daysLeft: number };
-
-export async function restore(id: string): Promise&lt;Note&gt; {
-  const response = await fetch(`/notes/${id}/restore`, { method: 'POST' });
-  if (!response.ok) throw new Error(`restore failed: ${response.status}`);
-  return response.json();
-}</code></pre>
+      <p><b>The first block.</b> <code>.cols</code> puts its children side by side. A child can be a paragraph, a <code>div</code>, a code block, a callout or a table.</p>
+      <p><b>The second block.</b> On a phone the blocks go below each other. Use it for two versions: before and after, request and answer, option A and option B.</p>
     </div>
 
-    <h3>Try it</h3>
-    <pre><code class="language-sh"># Delete a note, then get it back.
-curl -X DELETE "$API/notes/$ID" -H "Authorization: Bearer $TOKEN"
-curl -X POST "$API/notes/$ID/restore" -H "Authorization: Bearer $TOKEN"</code></pre>
-
+    <h3>A closed part</h3>
     <!-- <details> hides a long part that only some readers need. -->
     <details>
-      <summary>The configuration of the job</summary>
-      <pre data-title="appsettings.yaml"><code class="language-yaml">trash:
-  keep-days: 30
-  sweep: "0 3 * * *"   # each night at 03:00
-  dry-run: false</code></pre>
+      <summary>A part that is closed at the start</summary>
+      <p><code>details</code> hides a long part that only some readers need, for example a full log. Add the attribute <code>open</code> to show the part from the start.</p>
     </details>
   </section>
 
-  <section id="review">
-    <h2>Review</h2>
-    <p>The form of a code review: one box for each finding, with its weight, its place, the code and the proposed change.</p>
+  <section id="code">
+    <h2>Code</h2>
+    <p>A code block is a <code>pre</code> with a <code>code</code> inside. The class <code>language-xx</code> on the <code>code</code> element gives the colors. The comment at the top of this file has the list of the languages.</p>
+
+    <!-- data-title shows a file name, or a different short label, above the code. -->
+    <pre data-title="src/Geometry.cs"><code class="language-cs">// data-title on the pre element shows this file name above the code.
+public sealed record Point(double X, double Y);
+
+public static class Geometry
+{
+    public static double Distance(Point a, Point b, double scale = 1.5)
+    {
+        if (scale &lt;= 0) throw new ArgumentException("The scale must be positive.", nameof(scale));
+        var dx = a.X - b.X;
+        var dy = a.Y - b.Y;
+        return Math.Sqrt(dx * dx + dy * dy) * scale;
+    }
+}</code></pre>
+
+    <h3>The colors</h3>
+    <p>The script at the end of the file writes these classes. It does not change a block without a language, so there you can write the <code>span</code> tags yourself.</p>
+    <pre><code><span class="tk-c">tk-c</span>   a comment
+<span class="tk-s">tk-s</span>   a string
+<span class="tk-n">tk-n</span>   a number or a constant
+<span class="tk-k">tk-k</span>   a keyword
+<span class="tk-t">tk-t</span>   a type
+<span class="tk-f">tk-f</span>   the name of a function
+<span class="tk-p">tk-p</span>   a property or a key
+<span class="tk-m">tk-m</span>   an attribute, a decorator or a directive</code></pre>
+
+    <h3>Two blocks side by side</h3>
+    <div class="cols">
+      <pre data-title="answer.json"><code class="language-json">{
+  "from": { "x": 0, "y": 0 },
+  "to": { "x": 3, "y": 4 },
+  "distance": 7.5,
+  "exact": true
+}</code></pre>
+      <pre data-title="web/distance.ts"><code class="language-ts">interface Point { x: number; y: number }
+
+export async function distance(a: Point, b: Point): Promise&lt;number&gt; {
+  const response = await fetch('/distance', { method: 'POST', body: JSON.stringify({ a, b }) });
+  if (!response.ok) throw new Error(`failed: ${response.status}`);
+  return (await response.json()).distance;
+}</code></pre>
+    </div>
+
+    <h3>Versions in tabs</h3>
+    <p><code>.tabs</code> shows one of its children at a time. Each child names its tab with <code>data-tab</code>, and the page makes the buttons. Use it for two long versions of the same code, where two blocks side by side are hard to read. The last button shows the versions side by side.</p>
+    <!-- Write only the children. The script adds the buttons. On paper each child shows. -->
+    <div class="tabs">
+      <pre data-tab="Current" data-title="src/Geometry.cs"><code class="language-cs">public static double Distance(Point a, Point b, double scale = 1.5)
+{
+    if (scale &lt;= 0) throw new ArgumentException("The scale must be positive.", nameof(scale));
+    var dx = a.X - b.X;
+    var dy = a.Y - b.Y;
+    return Math.Sqrt(dx * dx + dy * dy) * scale;
+}</code></pre>
+      <pre data-tab="Proposed" data-title="src/Geometry.cs"><code class="language-cs">public static double Distance(Point a, Point b, double scale = 1.5)
+{
+    ArgumentOutOfRangeException.ThrowIfNegativeOrZero(scale);
+    return double.Hypot(a.X - b.X, a.Y - b.Y) * scale;
+}</code></pre>
+    </div>
+    <!-- An empty p with this class gets buttons that change all tabs of the page at the same time. -->
+    <p class="tabs-all"></p>
+    <p class="note">The line above is <code>&lt;p class="tabs-all"&gt;&lt;/p&gt;</code>. Its buttons change all tabs of the page. Put it at the start of a page that has many comparisons.</p>
+
+    <h3>A command and its output</h3>
+    <pre><code class="language-sh"># Write &amp; &lt; &gt; in code as &amp;amp; &amp;lt; &amp;gt;
+curl -sS -X POST "$API/distance" -H "Content-Type: application/json" \
+  -d '{"a": {"x": 0, "y": 0}, "b": {"x": 3, "y": 4}}' &gt; answer.json</code></pre>
+    <pre><code>A block without a language has one color.
+Use it for the output of a command or for a log.</code></pre>
+
+    <h3>A change</h3>
+    <p>The language <code>diff</code> gives a green line for added code and a red line for removed code.</p>
+    <pre data-title="src/Geometry.cs"><code class="language-diff">@@ -4,3 +4,3 @@
+ public static class Geometry
+ {
+-    public static double Distance(Point a, Point b, double scale = 1.5)
++    public static double Distance(Point a, Point b, double scale = 1.0)</code></pre>
+
+    <details>
+      <summary>More languages</summary>
+      <pre data-title="distance.py"><code class="language-py">from dataclasses import dataclass
+import math
+
+@dataclass(frozen=True)
+class Point:
+    x: float
+    y: float
+
+def distance(a: Point, b: Point, scale: float = 1.5) -> float:
+    """Return the scaled distance between two points."""
+    return math.hypot(a.x - b.x, a.y - b.y) * scale</code></pre>
+      <pre data-title="points.sql"><code class="language-sql">-- The ten points that are nearest to the origin.
+SELECT id, x, y, sqrt(x * x + y * y) AS distance
+FROM points
+WHERE label IS NOT NULL AND label &lt;&gt; 'hidden'
+ORDER BY distance
+LIMIT 10;</code></pre>
+      <pre data-title="settings.yaml"><code class="language-yaml">geometry:
+  scale: 1.5
+  unit: "meter"     # the unit of the answer
+  exact: true</code></pre>
+    </details>
+  </section>
+
+  <section id="findings">
+    <h2>Findings of a review</h2>
+    <p>A review has one box for each finding. The heading has a tag with the weight, the finding in one sentence, and the place in the code. The reason and the proposed change follow.</p>
 
     <!-- The classes ok, warn and bad set the color of the left edge. .where is the file and the line. -->
     <article class="finding bad">
-      <h3><span class="tag bad">must fix</span> The list still shows deleted notes <span class="where">src/Notes/NotesEndpoints.cs:31</span></h3>
-      <p>The query has no filter for <code>DeletedAt</code>, so rule R2 fails.</p>
-      <pre><code class="language-diff">@@ -29,5 +29,5 @@ app.MapGet("/notes", async (ClaimsPrincipal user, NotesDb db) =&gt;
-     var notes = await db.Notes
--        .Where(n =&gt; n.OwnerId == user.Id())
-+        .Where(n =&gt; n.OwnerId == user.Id() &amp;&amp; n.DeletedAt == null)
-         .OrderByDescending(n =&gt; n.UpdatedAt)
-         .ToListAsync();</code></pre>
+      <h3><span class="tag bad">must fix</span> The finding in one sentence <span class="where">src/Geometry.cs:10</span></h3>
+      <p>Say what goes wrong and when. In this example <code>dy</code> is always 0, because the line subtracts <code>a.Y</code> from itself. Then show the change.</p>
+      <pre><code class="language-diff">@@ -9,3 +9,3 @@ public static double Distance(Point a, Point b, double scale = 1.5)
+         var dx = a.X - b.X;
+-        var dy = a.Y - a.Y;
++        var dy = a.Y - b.Y;
+         return Math.Sqrt(dx * dx + dy * dy) * scale;</code></pre>
     </article>
 
     <article class="finding warn">
-      <h3><span class="tag warn">should fix</span> The job loads all rows into memory <span class="where">src/Notes/TrashJob.cs:18</span></h3>
-      <p>Delete in the database with one statement. <code>ExecuteDeleteAsync</code> does that.</p>
+      <h3><span class="tag warn">should fix</span> A finding of medium weight <span class="where">src/Geometry.cs:6</span></h3>
+      <p>A finding without code is one or two sentences.</p>
     </article>
 
     <article class="finding ok">
-      <h3><span class="tag ok">good</span> The restore endpoint is safe to call two times <span class="where">src/Notes/TrashEndpoints.cs:6</span></h3>
+      <h3><span class="tag ok">good</span> A thing that the author did well <span class="where">src/Geometry.cs:2</span></h3>
+    </article>
+
+    <article class="finding">
+      <h3><span class="tag accent">question</span> A question for the author <span class="where">src/Geometry.cs:11</span></h3>
+      <p>A finding without a second class has the accent color. Use it for a question, or for a remark without a judgement.</p>
     </article>
   </section>
 
-  <section id="open">
-    <h2>Open points</h2>
-    <ol>
-      <li>Does the 30-day time start again when a note goes to the trash a second time?</li>
-      <li>Who can see the trash of a notebook after its owner leaves the team?</li>
-    </ol>
-    <blockquote><p>"We must not lose a note because of one wrong click." (from the support ticket that started this work)</p></blockquote>
-    <p class="note">A note in small gray text, for a detail of low weight.</p>
+  <section id="diagrams">
+    <h2>Diagrams</h2>
+    <p>A diagram is inline SVG in a <code>figure</code>. The classes below take their colors from the page, so the diagram is correct in light and in dark.</p>
+    <figure>
+      <div class="scroll">
+        <svg viewBox="0 0 700 120" role="img" aria-label="Four boxes in a row with arrows between them. Each box shows one of the four box classes.">
+          <defs><marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="currentColor"/></marker></defs>
+          <rect class="s-box" x="10" y="26" width="140" height="44" rx="4"/><text class="s-text" x="80" y="53" text-anchor="middle">a part</text>
+          <rect class="s-accent" x="190" y="26" width="140" height="44" rx="4"/><text class="s-text" x="260" y="53" text-anchor="middle">the part in focus</text>
+          <rect class="s-ok" x="370" y="26" width="140" height="44" rx="4"/><text class="s-text" x="440" y="53" text-anchor="middle">a good result</text>
+          <rect class="s-miss" x="550" y="26" width="140" height="44" rx="4"/><text class="s-text" x="620" y="53" text-anchor="middle">a missing part</text>
+          <path class="s-arrow" d="M150 48H190" marker-end="url(#tip)"/>
+          <path class="s-arrow" d="M330 48H370" marker-end="url(#tip)"/>
+          <path class="s-arrow" d="M510 48H550" marker-end="url(#tip)"/>
+          <text class="s-muted" x="80" y="92" text-anchor="middle">s-box</text>
+          <text class="s-muted" x="260" y="92" text-anchor="middle">s-accent</text>
+          <text class="s-muted" x="440" y="92" text-anchor="middle">s-ok</text>
+          <text class="s-muted" x="620" y="92" text-anchor="middle">s-miss</text>
+          <text class="s-muted" x="350" y="112" text-anchor="middle">the lines are s-arrow, the text in a box is s-text, and this text is s-muted</text>
+        </svg>
+      </div>
+      <figcaption>A caption says what the diagram shows. On a phone the diagram scrolls sideways, so its text stays readable.</figcaption>
+    </figure>
   </section>
 
 </main>
@@ -332,12 +456,12 @@ curl -X POST "$API/notes/$ID/restore" -H "Authorization: Bearer $TOKEN"</code></
      Do not read or change the lines below. They are the script that colors the code, and the
      font data (200 KB in a few very long lines). Keep them at the end of the file. -->
 <script>
-// spec.js: colors the code blocks of a page. It has no library and makes no request, so it works
+// This script colors the code blocks of a page, and it makes the tabs. It has no library and makes no request, so it works
 // from a file on disk.
 //
 // A block is <pre><code class="language-xx">. The script puts <span class="tk-..."> tags around
-// the comments, strings, numbers, keywords, types, function names and property names. spec.css has
-// the colors. A language that is not in the list below stays plain.
+// the comments, strings, numbers, keywords, types, function names and property names. The first <style>
+// of this file has the colors. A language that is not in the list below stays plain.
 //
 // The script reads code with regular expressions and not with a parser. It knows what a word looks
 // like, but not what the word means, so some words get no color or a wrong one. That is the price
@@ -578,6 +702,40 @@ curl -X POST "$API/notes/$ID/restore" -H "Authorization: Bearer $TOKEN"</code></
     box.className = 'scroll';
     table.replaceWith(box);
     box.append(table);
+  }
+
+  // ---- tabs ----
+  // <div class="tabs"> shows one of its children at a time. Each child names its tab with data-tab.
+  // The script makes the buttons, so a page without the script shows all children.
+  const SIDE = 'Side by side';
+  const panesOf = box => [...box.querySelectorAll(':scope > [data-tab]')];
+  const namesOf = box => [...new Set(panesOf(box).map(pane => pane.dataset.tab)), SIDE];
+  const boxes = [...document.querySelectorAll('.tabs')].filter(box => panesOf(box).length > 1);
+  function tabButton(name, action) {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.textContent = name;
+    el.addEventListener('click', action);
+    return el;
+  }
+  function show(box, name) {
+    const panes = panesOf(box);
+    // A box without a child of this name keeps what it shows.
+    if (name !== SIDE && !panes.some(pane => pane.dataset.tab === name)) return;
+    for (const pane of panes) pane.hidden = name !== SIDE && pane.dataset.tab !== name;
+    for (const el of box.querySelectorAll(':scope > .tab-bar > button')) el.setAttribute('aria-pressed', String(el.textContent === name));
+    box.classList.toggle('all', name === SIDE);
+  }
+  for (const box of boxes) {
+    const bar = document.createElement('div');
+    bar.className = 'tab-bar';
+    bar.append(...namesOf(box).map(name => tabButton(name, () => show(box, name))));
+    box.prepend(bar);
+    show(box, namesOf(box)[0]);
+  }
+  // <p class="tabs-all"></p> gets buttons that change all boxes of the page at the same time.
+  if (boxes.length) for (const all of document.querySelectorAll('.tabs-all:empty')) {
+    all.append('All tabs: ', ...namesOf(boxes[0]).map(name => tabButton(name, () => { for (const box of boxes) show(box, name); })));
   }
 })();
 </script>

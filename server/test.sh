@@ -45,8 +45,8 @@ check "wrong token gets 401" "$(curl -sS -m 5 -o /dev/null -w '%{http_code}' -H 
 out=$(api POST "/api/pages?days=3" -H 'Content-Type: text/html' --data-binary "@$template")
 id=$(id_of "$out"); made+=("$id")
 check "the example page is accepted" "$out" "201"
-check "the server found the questions" "$out" '"questions":["keep-time","trash-place","trash-actions","trash-name","next"]'
-check "the title is read" "$out" '"title":"Deleted Notes Decisions"'
+check "the server found the questions" "$out" '"questions":["one-answer","cards","more-answers","text-answer","next"]'
+check "the title is read" "$out" '"title":"Catalog of the elements"'
 page=$(curl -sS -m 10 -D "$work/headers" "$SHOW_URL/p/$id")
 check "the page gets the stylesheet" "$page" '<link rel="stylesheet" href="/kit/page.css?v='
 check "the page gets the script" "$page" '<script src="/kit/page.js?v='

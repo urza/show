@@ -3,7 +3,7 @@ name: show
 description: Show a topic to the user on a web page, and read their answers and comments back from the page. The page has a known look (IBM Plex fonts, one reading column) and a toolbox of elements, such as tables, diagrams, option cards, and mockups that show how a change looks in the user's app. It can hold any static HTML. The user selects answers, writes notes and a comment in the browser, also on a phone. Use it when a feature, a plan, a design or a code review has open decisions for the user, when the user wants to see and compare how a change looks in the app, when the user asks you to show something on a page, when the user asks for mockups, or when the user asks for a page they can answer in.
 compatibility: Needs curl, and a show server of the user. The environment variables SHOW_URL and SHOW_TOKEN give its address and its token.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # show
@@ -14,7 +14,8 @@ read the answers later with one command.
 
 You write plain HTML and send it to the server with `curl`. The server adds the look (the
 stylesheet, the fonts and the page script), so your file has no stylesheet link and no script.
-`assets/template.html` is a complete example page. It shows each element that the stylesheet has.
+`assets/template.html` is a complete example page. It is a catalog: it shows each element that the
+stylesheet has, and the text of each example says what the element is for.
 
 The server is in the variables `SHOW_URL` (its address) and `SHOW_TOKEN` (its secret). If they are
 not set, ask the user for them. Do not write the token into a file of a project.
@@ -37,9 +38,10 @@ color variables of the stylesheet, so that it looks like a part of the page.
 
 ### 1. Write the page
 
-Copy `assets/template.html` to a work file and replace its content with yours. The `<style>` in the
-template holds only the look of the example app for its mockups. Replace it with styles that your
-page needs, or remove it.
+Copy `assets/template.html` to a work file and replace its content with yours. The template is a
+catalog of the elements and has no topic, so take its markup and not its structure. The `<style>`
+in the template holds only the look of a placeholder app for its mockups. Replace it with styles
+that your page needs, or remove it.
 
 A short page needs no document frame. You can send only the content, for example an `<h1>` and some
 paragraphs. The server then adds the frame and the reading column.
@@ -133,8 +135,8 @@ These rules are technical. The page breaks without them. The server refuses a pa
 rule 1, 2 or 3.
 
 1. **No script.** The browser runs only the script of the server. A `<script>` tag of yours does
-   not run, and an attribute such as `onclick` does nothing. Show a state with CSS, for example
-   with `<details>`, `:has(input:checked)` or `:target`.
+   not run, and an attribute such as `onclick` does nothing. Show a state with `<details>`, with
+   the tabs of the toolbox, or with CSS, for example `:has(input:checked)` or `:target`.
 2. **Nothing from another site.** No web fonts, no stylesheet link, no remote image, no `<iframe>`.
    The browser blocks them. Put styles into a `<style>` tag. Put an image into the page as inline
    `<svg>` or as a `data:` URL. A link (`<a href>`) to another site is permitted. A page can have
@@ -168,7 +170,7 @@ order they can understand it. These principles worked on each page:
 
 A shape that fits a plan for a feature, in this order: the words on this page, the problem and its
 cause, the solution with the rejected solutions, what changes for a person, the questions in their
-places, the code changes, the next step. `assets/template.html` has this shape.
+places, the code changes, the next step.
 
 Other shapes are as good when they fit better. Examples:
 
@@ -176,6 +178,11 @@ Other shapes are as good when they fit better. Examples:
   text. Use it when the decisions are about what a person sees.
 - **The result of a review.** Start with the points of the reviewers and what happened to each one.
   Then ask only about the points that need the user.
+- **Proposed code changes.** One block for each change: a heading with the file and the line, the
+  current code and the proposed code in tabs, and one sentence that says why the result is the
+  same or better. A question below a change asks if you apply it.
+- **The second version of a page.** Start with a table of what the user decided: the question, the
+  answer of the user, and what you do with it. Then ask only the new questions.
 - **One decision.** A short page with one explanation and one question is correct when only one
   decision is open. Do not fill it up.
 - **A report without questions.** The user reads it and comments on it. Such a page has a comment
@@ -198,7 +205,8 @@ elements that help, and leave out the others.
 | Table | `<div class="scroll"><table>` | Comparisons, for example "today" and "after the change". The `.scroll` wrapper lets a wide table scroll on a phone. |
 | Tag | `<span class="tag new">` | A short mark in a table cell or an option. The classes are `new` (green), `less` (red), `same` (grey), `ask` (amber, points to a question) and `rec` (blue, "recommended"). |
 | Diagram | `<figure><div class="scroll"><svg>` | A sequence, a flow of data, a time line, a structure. See "Diagrams" below. |
-| Code | `<pre><code class="language-js">` and `<code>` | A sketch of code, and names of files and functions in a sentence. Write `&lt;`, `&gt;` and `&amp;` in code. The page colors a block that names its language: `js`, `cs`, `py`, `sql`, `sh`, `json`, `css` or `html`. |
+| Code | `<pre><code class="language-js">` and `<code>` | A sketch of code, and names of files and functions in a sentence. Write `&lt;`, `&gt;` and `&amp;` in code. The page colors a block that names its language: `js`, `cs`, `py`, `sql`, `sh`, `json`, `css` or `html`. `<pre data-title="src/file.js">` shows a file name above the code. |
+| Tabs | `<div class="tabs">` with children that have `data-tab` | Two or more versions of one thing, one at a time: the current code and the proposed code, or two alternatives. See "Versions in tabs" below. |
 | Good and cost | `<ul class="pc">` | Below an option: one `<li>` with `<b class="good">Good</b>` and one with `<b class="cost">Cost</b>`, each followed by a `<span>` with a sentence. |
 | Option cards | `<div class="choices">` | Options side by side, each with a drawing at the top. See "Mockups". |
 | Mockup | `<div class="shot"><div class="mock">` | A drawing of the app. See "Mockups". |
@@ -223,6 +231,27 @@ of the page:
 - Use the fonts: `var(--body)` for text, `var(--display)` for headings, `var(--mono)` for code and
   small labels.
 - Examine the element at the width of a phone (390 px). A wide element goes into a `.scroll`.
+
+### Versions in tabs
+
+    <div class="tabs">
+      <pre data-tab="Current" data-title="src/total.js"><code class="language-js">...</code></pre>
+      <pre data-tab="Proposed" data-title="src/total.js"><code class="language-js">...</code></pre>
+    </div>
+
+Use tabs to compare alternatives of the same code. Two long blocks side by side are hard to read,
+and two long blocks below each other make the user scroll between them.
+
+- Write only the children. Each child names its tab with `data-tab`. The page adds one button for
+  each name and the button "Side by side". The first child shows at the start.
+- A child can be each element: a `<pre>`, a `<div>` with text and code, a mockup. More than two
+  children are permitted, for example three alternatives.
+- Use the same names in each `.tabs` of a page, for example "Current" and "Proposed". An empty
+  `<p class="tabs-all"></p>` then gets buttons that change all tabs of the page at the same time.
+  Put it at the start of a page that has many comparisons.
+- Short versions need no tabs. Show them below each other, or in a table.
+- Do not put `.tabs` inside an option of a question. The selected tab is not an answer, and the
+  page does not save it.
 
 ### Diagrams
 
@@ -273,7 +302,7 @@ person sees. The user decides faster from two drawings of the app than from two 
       <legend>Where does a person open the trash?</legend>
       <div class="choices">
         <label class="opt">
-          <div class="shot" aria-hidden="true"><div class="mock n"> ...the drawing... </div></div>
+          <div class="shot" aria-hidden="true"><div class="mock x"> ...the drawing... </div></div>
           <input type="radio" name="trash-place" value="tabs"><b>Two tabs below the list. <span class="tag rec">recommended</span></b>
           <ul class="pc">
             <li><b class="good">Good</b><span>The person always sees the trash.</span></li>
@@ -304,7 +333,7 @@ What makes a drawing useful:
 
 - **It looks like the app.** Read the stylesheet of the app. Use its real colors, font sizes,
   distances and corner sizes. Put the values into CSS variables with a prefix of their own, as the
-  template does with `--n-`. Do not use the color variables of the page inside a mockup, because a
+  template does with `--x-`. Do not use the color variables of the page inside a mockup, because a
   mockup must look the same in the light and the dark theme of the page. When the app has no
   stylesheet yet, say in the text that the drawing is a sketch.
 - **It has the correct proportions.** Write each size in `em`. Inside a `.mock`, 1em is 16 px of the
