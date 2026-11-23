@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Example: a diagram of states</title>
+<style>
+/* The colors of the states. Each state has one color, and the page uses that color for the state
+   in the diagram, in the tags and in the text. The stylesheet of the page has four colors that
+   change with the theme (--accent, --ok, --warn, --gone). This diagram has five states, so it
+   defines a fifth color here, for the light and the dark theme. */
+:root { --st-purple: #7d4e9f; --st-purple-soft: #efe4f5; }
+@media (prefers-color-scheme: dark) { :root { --st-purple: #c99bd8; --st-purple-soft: #2c2135; } }
+
+/* A box of a state. The fill is a step away from the background of the figure, so the box
+   stands out in both themes. */
+.st { fill: var(--surface-2); stroke-width: 1.5; }
+.st-open { stroke: var(--accent); }
+.st-recent { stroke: var(--ok); }
+.st-space { stroke: var(--st-purple); }
+.st-trash { stroke: var(--warn); }
+.st-gone { stroke: var(--gone); stroke-dasharray: 4 3; }
+.st-outside { stroke: var(--line-strong); }
+
+/* A transition. Grey is the default. Only a transition that loses something has a color: the
+   color of the state where it ends. A broken line is a rare shortcut. */
+.tr { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.tr-trash { stroke: var(--warn); }
+.tr-gone { stroke: var(--gone); }
+.tr-rare { stroke-dasharray: 4 3; }
+.ah { fill: var(--muted); }
+.ah-trash { fill: var(--warn); }
+.ah-gone { fill: var(--gone); }
+
+/* A state in a table or a sentence: a tag in the color of its box. */
+.tag.st-open { background: var(--accent-soft); color: var(--accent); }
+.tag.st-recent { background: var(--ok-soft); color: var(--ok); }
+.tag.st-space { background: var(--st-purple-soft); color: var(--st-purple); }
+.tag.st-trash { background: var(--warn-soft); color: var(--warn); }
+.tag.st-gone { background: var(--gone-soft); color: var(--gone); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <section>
+    <div class="eyebrow">example · a diagram of states</div>
+    <h1>Where a note goes in vrtti</h1>
+    <p class="lede">This page is an example of a diagram of states. A diagram of states shows where a thing can be and which action moves it from one state to another. The content comes from vrtti, a note app (<a href="https://github.com/urza/editor">urza/editor</a>). On each device, a note is in one of four states: Open, Recent, a space drawer, or Trash.</p>
+  </section>
+</header>
+
+<section id="diagram">
+  <h2>The diagram</h2>
+  <figure>
+    <div class="scroll">
+      <!-- The layout. Open is in the center, because most transitions start or end there. Recent
+           and the space drawer sit above and below it, so each pair of "close" and "reopen" is two
+           short parallel arrows. Trash is to the right of Open. The end state (Gone) and the cause
+           from outside (Other devices) are at the right edge.
+           Each line is straight or has right angles only (H and V steps in a path). Each arrow
+           ends 4 units before a box, so its head does not touch the border. Each label is beside
+           its line, never on it. -->
+      <svg viewBox="0 0 1000 455" role="img" aria-label="Diagram. Open and Recent swap by close and reopen for local notes. Open and a space drawer swap by close and reopen for synced notes. Move to trash takes a note from Open, Recent, or a space drawer to Trash, and 30 days in Recent also does. Restore to space takes a note from Trash to Open, and Restore as local takes it to Recent. After 30 days in Trash, or with Delete permanently, a note is gone. Closing an empty note removes it at once. Changes from other devices put notes in Trash.">
+        <defs>
+          <!-- One arrowhead for each color of line. The ids have the prefix "st-", so a second
+               diagram on the same page can have its own markers. -->
+          <marker id="st-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          <marker id="st-ah-trash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-trash"/></marker>
+          <marker id="st-ah-gone" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah-gone"/></marker>
+        </defs>
+
+        <!-- The states: the name, and one short line about the state. -->
+        <g text-anchor="middle">
+          <rect x="100" y="20" width="200" height="70" rx="6" class="st st-recent"/>
+          <text x="200" y="50" fill="currentColor" font-size="16" font-weight="600">Recent</text>
+          <text x="200" y="72" class="s-muted" font-size="12">local notes, this device</text>
+
+          <rect x="100" y="185" width="200" height="70" rx="6" class="st st-open"/>
+          <text x="200" y="215" fill="currentColor" font-size="16" font-weight="600">Open</text>
+          <text x="200" y="237" class="s-muted" font-size="12">tabs of a window</text>
+
+          <rect x="100" y="350" width="200" height="70" rx="6" class="st st-space"/>
+          <text x="200" y="380" fill="currentColor" font-size="16" font-weight="600">Space drawer</text>
+          <text x="200" y="402" class="s-muted" font-size="12">one for each space</text>
+
+          <rect x="560" y="185" width="200" height="70" rx="6" class="st st-trash"/>
+          <text x="660" y="215" fill="currentColor" font-size="16" font-weight="600">Trash</text>
+          <text x="660" y="237" class="s-muted" font-size="12">30 days, this device</text>
+
+          <rect x="800" y="20" width="180" height="70" rx="6" class="st st-outside"/>
+          <text x="890" y="50" fill="currentColor" font-size="16" font-weight="600">Other devices</text>
+          <text x="890" y="72" class="s-muted" font-size="12">through the server</text>
+
+          <rect x="800" y="350" width="180" height="70" rx="6" class="st st-gone"/>
+          <text x="890" y="380" fill="currentColor" font-size="16" font-weight="600">Gone</text>
+          <text x="890" y="402" class="s-muted" font-size="12">removed for good</text>
+        </g>
+
+        <!-- The transitions. Each label is the action in the words of the app. -->
+        <g fill="currentColor" font-size="12">
+          <!-- Open and Recent -->
+          <line x1="170" y1="185" x2="170" y2="94" class="tr" marker-end="url(#st-ah)"/>
+          <text x="162" y="135" text-anchor="end">close a</text>
+          <text x="162" y="151" text-anchor="end">local note</text>
+          <line x1="230" y1="90" x2="230" y2="181" class="tr" marker-end="url(#st-ah)"/>
+          <text x="238" y="142">reopen</text>
+
+          <!-- Open and the space drawer -->
+          <line x1="170" y1="255" x2="170" y2="346" class="tr" marker-end="url(#st-ah)"/>
+          <text x="162" y="300" text-anchor="end">close a</text>
+          <text x="162" y="316" text-anchor="end">synced note</text>
+          <line x1="230" y1="350" x2="230" y2="259" class="tr" marker-end="url(#st-ah)"/>
+          <text x="238" y="300">reopen, or</text>
+          <text x="238" y="316">click a title row</text>
+
+          <!-- Open and Trash -->
+          <line x1="300" y1="200" x2="556" y2="200" class="tr tr-trash" marker-end="url(#st-ah-trash)"/>
+          <text x="430" y="192" text-anchor="middle">Move to trash</text>
+          <line x1="560" y1="240" x2="304" y2="240" class="tr" marker-end="url(#st-ah)"/>
+          <text x="430" y="256" text-anchor="middle">Restore to &lt;space&gt;</text>
+
+          <!-- Recent and Trash -->
+          <path d="M 700 185 V 45 H 304" class="tr" marker-end="url(#st-ah)"/>
+          <text x="500" y="37" text-anchor="middle">Restore as local</text>
+          <path d="M 300 70 H 620 V 181" class="tr tr-trash" marker-end="url(#st-ah-trash)"/>
+          <text x="460" y="88" text-anchor="middle">Move to trash, or 30 days pass</text>
+
+          <!-- The space drawer to Trash -->
+          <path d="M 300 385 H 660 V 259" class="tr tr-trash" marker-end="url(#st-ah-trash)"/>
+          <text x="480" y="377" text-anchor="middle">Move to trash</text>
+
+          <!-- Other devices to Trash -->
+          <path d="M 850 90 V 220 H 764" class="tr tr-trash" marker-end="url(#st-ah-trash)"/>
+          <text x="858" y="140">deleted, moved</text>
+          <text x="858" y="156">away, space lost</text>
+
+          <!-- Trash to Gone -->
+          <path d="M 740 255 V 395 H 796" class="tr tr-gone" marker-end="url(#st-ah-gone)"/>
+          <text x="748" y="300">after 30 days, or</text>
+          <text x="748" y="316">Delete permanently</text>
+
+          <!-- Open to Gone: the rare shortcut. It goes round the left side and along the bottom,
+               so it crosses no other line. -->
+          <path d="M 100 220 H 40 V 440 H 890 V 424" class="tr tr-gone tr-rare" marker-end="url(#st-ah-gone)"/>
+          <text x="560" y="432" text-anchor="middle">close an empty note (no Trash)</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>The states of a note on one device in vrtti, and the actions that move a note between them. The source is architecture.md §28 in urza/editor.</figcaption>
+  </figure>
+  <p class="note">The diagram leaves out edits from other devices, because an edit changes a note where it is and does not move it. A diagram of states shows only what moves the thing, and a table gives the details of each case.</p>
+</section>
+
+<section id="table">
+  <h2>The same states in a table</h2>
+  <p>The table gives one row for each case. The tag of a state has the color of its box, so the reader connects a row with the diagram.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>You do</th><th>The note goes to</th></tr></thead>
+      <tbody>
+        <tr><td>Close a tab of a local note.</td><td><span class="tag st-recent">Recent</span> The note stays there for 30 days.</td></tr>
+        <tr><td>Close a tab of a synced note.</td><td><span class="tag st-space">Space drawer</span> A note in a space drawer does not expire.</td></tr>
+        <tr><td>Select "Move to trash" on a note.</td><td><span class="tag st-trash">Trash</span> No dialog asks first, because Trash keeps the note for 30 days.</td></tr>
+        <tr><td>Select "Restore to &lt;space&gt;" in Trash.</td><td><span class="tag st-open">Open</span> The note opens as a tab and syncs again.</td></tr>
+        <tr><td>Select "Delete permanently" in Trash.</td><td><span class="tag st-gone">Gone</span> There is no undo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

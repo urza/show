@@ -238,6 +238,42 @@ sends what to which part, what occurs in which order, where the data is lost. So
 - A diagram of more than approximately 760 px scrolls sideways on a phone. That is acceptable for a
   time line. For a simple relation, draw it narrow.
 
+### A diagram of states
+
+A diagram of states shows where a thing can be and which action moves it from one state to
+another: a note that is open, closed, in the trash or gone, or an order that is new, paid or sent.
+`assets/state-diagram.html` is a complete example from a real app. Its comments give the reason
+for each decision. Use it when your topic has this shape, and take what fits. It is one good
+example, not the only correct form, and other diagrams can look different.
+
+What makes the example easy to read:
+
+- **One box for each state, and one arrow for each transition.** A box has the name of the state
+  and one short line about it, for example "30 days, this device". An arrow has the action that
+  causes the transition, in the words of the app, for example "Move to trash". The reader then
+  finds the same words in the app.
+- **The state with the most transitions is in the center.** The states that a thing leaves and
+  enters again sit next to it, so a pair such as "close" and "reopen" is two short parallel
+  arrows. The pairs are clear at a glance, and few lines cross.
+- **Straight lines and right angles only.** A `<path>` uses `H` and `V` steps and no curves. The
+  eye follows a line with corners easily, and a label fits beside a straight part. Each arrow
+  ends 4 units before a box, so its head does not touch the border.
+- **Each state has one color.** The border of its box has the color, and so does the tag of the
+  state in the tables and the text of the page. The reader then connects a row with a box. The
+  stylesheet has four colors that change with the theme: `--accent`, `--ok`, `--warn` and `--gone`.
+  For more states, the example defines a fifth color for the light and the dark theme.
+- **An arrow has a color only when the transition loses something.** An arrow into the trash has
+  the color of the trash, and an arrow to "gone" has the color of "gone". All other arrows are
+  grey. The dangerous paths are then the first thing that the reader sees.
+- **A broken line marks the end and the exception.** The end state ("gone") and a rare shortcut
+  (an empty note that skips the trash) have a broken line. A cause from outside, for example
+  "Other devices", is a grey box at the edge.
+- **The diagram shows only what moves the thing.** A sentence below the diagram names what it
+  leaves out, and a table below gives the details of each case. The diagram stays small enough to
+  read in one look.
+- **The `aria-label` gives each transition as a sentence.** A person with a screen reader gets the
+  same content.
+
 ## Guidance: questions
 
     <fieldset class="ask" data-q="keep-time">
