@@ -27,6 +27,7 @@ and no other tool. A new sandbox with the two values can read each page that an 
 skills/show/
   SKILL.md               # the steps, a short contract, and guidance for the shape, the elements and the text
   assets/template.html   # a complete example page with each element
+  assets/state-diagram.html  # an example of one kind of diagram: states and the actions between them
 server/
   Program.cs             # the endpoints
   PageHtml.cs            # the check of a page, and the HTML that a browser gets
