@@ -36,7 +36,7 @@ server/
   Dockerfile, compose.yaml, .env.example
   test.sh                # checks a running server with curl
 .github/workflows/container.yml   # builds the image, runs test.sh on it, publishes it to ghcr.io
-templates/spec-template.html   # one file for a spec or a code review, without the server; see below
+templates/doc-template.html    # one file for a spec, a code review or a report, without the server; see below
 docs/nsite-clay.md       # notes on nsite-clay, the transport of the first version
 ```
 
@@ -201,18 +201,19 @@ image there. It publishes the images only after a push to `main` or a `v*` tag.
 `test.sh` needs only `curl`. It checks the endpoints and each rule that makes the server refuse a
 page. It does not open a browser, so it does not check `web/page.js`.
 
-## The spec template
+## The document template
 
-`templates/spec-template.html` is for a page that needs no answers: a spec, a code walk-through, a
-code review. It is one file with the look of show, and it needs no server and no network. Give it
-to an agent of a different project with this instruction:
+`templates/doc-template.html` is for a page that needs no answers: a spec, a code walk-through, a
+code review, a report. It is one file with the look of show, and it needs no server and no
+network. Give it to an agent of a different project with this instruction:
 
-> Copy `spec-template.html`. Read only the lines above the mark "END OF THE CONTENT". Replace the
+> Copy `doc-template.html`. Read only the lines above the mark "END OF THE CONTENT". Replace the
 > content of `<main>` with your content, and keep the rest.
 
-The file has three parts: the styles and an example page at the top (20 KB), then a script that
-colors code blocks, then the IBM Plex fonts as data (200 KB). The same instruction, and the list
-of the 18 languages with colors, is in a comment at the top of the file.
+The file has three parts: the styles and an example page at the top (23 KB), then a script that
+colors code blocks, then the IBM Plex fonts as data (200 KB). The example page is a catalog: it
+shows each element, and the text of each example says what the element is for. The same
+instruction, and the list of the 18 languages with colors, is in a comment at the top of the file.
 
 The script reads code with regular expressions and not with a parser, so some words get a wrong
 color or none.

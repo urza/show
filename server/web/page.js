@@ -1,10 +1,11 @@
 // show: the script of each page. The server adds it to a page; a page has no script of its own.
 //
-// It colors the code blocks, counts the answers, and keeps them on the server: it gets the saved
+// It colors the code blocks, makes the tabs, counts the answers, and keeps them on the server: it gets the saved
 // answers from /p/<id>/state when the page loads, and sends all answers there as one JSON object
 // after each change. The agent reads that object from the server.
 (() => {
   colorCode();
+  tabs();
 
   const asks = [...document.querySelectorAll('fieldset.ask[data-q]')];
   const COPY_HINT = 'Copy the text at the end of the page into the chat.';
@@ -193,6 +194,40 @@
     render();
     setState(asks.length ? 'The page saves each answer.' : 'The page saves your comment.', 'ok');
     if (early.size) changed();
+  }
+
+  // ---- tabs ----
+  // <div class="tabs"> shows one of its children at a time. Each child names its tab with data-tab.
+  // The script makes the buttons, so the agent writes only the children. The selected tab is not a
+  // part of the answers, and the page does not save it.
+  function tabs() {
+    const SIDE = 'Side by side';
+    const panesOf = box => [...box.querySelectorAll(':scope > [data-tab]')];
+    const namesOf = box => [...new Set(panesOf(box).map(pane => pane.dataset.tab)), SIDE];
+    const boxes = [...document.querySelectorAll('.tabs')].filter(box => panesOf(box).length > 1);
+    function tabButton(name, action) {
+      const el = button('', name);
+      el.addEventListener('click', action);
+      return el;
+    }
+    function show(box, name) {
+      const panes = panesOf(box);
+      // A box without a child of this name keeps what it shows.
+      if (name !== SIDE && !panes.some(pane => pane.dataset.tab === name)) return;
+      for (const pane of panes) pane.hidden = name !== SIDE && pane.dataset.tab !== name;
+      for (const el of box.querySelectorAll(':scope > .tab-bar > button')) el.setAttribute('aria-pressed', String(el.textContent === name));
+      box.classList.toggle('all', name === SIDE);
+    }
+    for (const box of boxes) {
+      const bar = make('div', 'tab-bar');
+      bar.append(...namesOf(box).map(name => tabButton(name, () => show(box, name))));
+      box.prepend(bar);
+      show(box, namesOf(box)[0]);
+    }
+    // <p class="tabs-all"></p> gets buttons that change all boxes of the page at the same time.
+    if (boxes.length) for (const all of document.querySelectorAll('.tabs-all:empty')) {
+      all.append('All tabs: ', ...namesOf(boxes[0]).map(name => tabButton(name, () => { for (const box of boxes) show(box, name); })));
+    }
   }
 
   // ---- the colors of code ----

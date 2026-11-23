@@ -24,14 +24,21 @@ Read `README.md` first. It explains how the parts work together.
   Write all other content as guidance with its reason, not as an order.
 - **`skills/show/assets/template.html` is the catalog of the elements.** When you add an element
   to `server/web/page.css`, add an example to the template and one row to the table in `SKILL.md`.
+  The template has no topic: the text of each example says what the element is for. Do not put an
+  invented project into it. `server/test.sh` sends the template, so it knows its title and the ids
+  of its questions.
+- **The tabs are in two places:** `server/web/` and `templates/doc-template.html` each have their
+  own copy of the styles and the script of `.tabs`. Change both.
 - **Plain words.** Write `SKILL.md`, the template, the error sentences of the server and the texts
   of the status bar in short, complete sentences in the active voice. An error sentence says what
   to change.
-- **`templates/spec-template.html` is one complete file, and it is its own source.** It has no
+- **`templates/doc-template.html` is one complete file, and it is its own source.** It has no
   build. Change its styles and its script inside the file. Do not read or print its end: the lines
   below the mark "END OF THE CONTENT" are 200 KB of font data. It started as a copy of the look in
   `server/web/page.css`, but the two are independent. A change of the look in one does not reach
-  the other, so decide each time if both need it.
+  the other, so decide each time if both need it. Its example content is a catalog of the elements
+  without a subject: the text of each example says what the element is for. Keep it that way, and
+  add an example when you add an element.
 - Run `bash server/test.sh` against a new build before each commit. It does not open a browser,
   so examine a change of `web/page.js` or `web/page.css` in a browser too.
 - `upstream` (https://github.com/urza/show) is the stable repository. `origin`

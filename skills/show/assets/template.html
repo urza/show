@@ -3,267 +3,333 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Deleted Notes Decisions</title>
+<title>Catalog of the elements</title>
 <style>
-/* The look of the Notes app, for the mockups. The values come from the stylesheet of the app
-   (src/app.css). They do not use the color variables of the page, so a mockup shows the app in
-   the same way in the light and the dark theme of the page. Each size is in em, and 1em is
-   16 px of the app. */
+/* The look of the example app, for the mockups. It is a placeholder. On a real page, take these
+   values from the stylesheet of the app that you draw. They do not use the color variables of
+   the page, so a mockup shows the app in the same way in the light and the dark theme of the
+   page. Each size is in em, and 1em is 16 px of the app. */
 :root {
-  --n-bg: #fbfaf7; --n-bar: #2b3a55; --n-on-bar: #ffffff; --n-ink: #1f2430; --n-dim: #7a8194;
-  --n-line: #e6e2d9; --n-accent: #d9622b; --n-toast: #1f2430; --n-undo: #ffb38a;
+  --x-bg: #fbfaf7; --x-bar: #2b3a55; --x-on-bar: #ffffff; --x-ink: #1f2430; --x-dim: #7a8194;
+  --x-line: #e6e2d9; --x-accent: #d9622b; --x-toast: #1f2430; --x-undo: #ffb38a;
   --shot-bg: #c9ced8; --shot-fg: #3d4452;
 }
-.mock.n { --mock-w: 24.4; background: var(--n-bg); color: var(--n-ink); border-radius: 0.5em; }
-.n-bar { display: flex; align-items: center; gap: 0.75em; height: 3.25em; padding: 0 1em; background: var(--n-bar); color: var(--n-on-bar); font-size: 1.1em; font-weight: 600; }
-.n-row { display: grid; gap: 0.1em; padding: 0.7em 1em; border-bottom: 1px solid var(--n-line); }
-.n-row b { font-weight: 600; }
-.n-row span { color: var(--n-dim); font-size: 0.875em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.n-row.gone { opacity: 0.35; text-decoration: line-through; }
-.n-tabs { display: grid; grid-template-columns: 1fr 1fr; text-align: center; font-size: 0.875em; color: var(--n-dim); }
-.n-tabs span { padding: 0.8em 0; }
-.n-tabs .on { color: var(--n-accent); font-weight: 600; box-shadow: inset 0 0.15em 0 var(--n-accent); }
-.n-menu { position: absolute; top: 3.6em; bottom: 0; left: 0; width: 62%; padding: 0.5em 0; background: var(--n-bg); box-shadow: 0.3em 0 1em rgb(0 0 0 / 0.25); }
-.n-menu span { display: block; padding: 0.7em 1em; }
-.n-menu .on { color: var(--n-accent); font-weight: 600; }
-.n-toast { display: flex; justify-content: space-between; margin: 0.75em; padding: 0.7em 1em; border-radius: 0.4em; background: var(--n-toast); color: var(--n-on-bar); font-size: 0.875em; }
-.n-toast b { color: var(--n-undo); }
+.mock.x { --mock-w: 24.4; background: var(--x-bg); color: var(--x-ink); border-radius: 0.5em; }
+.x-bar { display: flex; align-items: center; justify-content: space-between; height: 3.25em; padding: 0 1em; background: var(--x-bar); color: var(--x-on-bar); font-size: 1.1em; font-weight: 600; }
+.x-row { display: grid; gap: 0.1em; padding: 0.7em 1em; border-bottom: 1px solid var(--x-line); }
+.x-row b { font-weight: 600; }
+.x-row span { color: var(--x-dim); font-size: 0.875em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.x-btn { padding: 0.4em 0.9em; border-radius: 0.4em; background: var(--x-accent); color: var(--x-on-bar); font-size: 0.8em; font-weight: 600; }
+.x-foot { display: flex; justify-content: flex-end; min-height: 3.2em; padding: 0.75em 1em; }
+.x-toast { display: flex; justify-content: space-between; margin: 0.75em; padding: 0.7em 1em; border-radius: 0.4em; background: var(--x-toast); color: var(--x-on-bar); font-size: 0.875em; }
+.x-toast b { color: var(--x-undo); }
 </style>
 </head>
 <body>
 <div class="page">
 
+<!-- The start of the page: the project and the scope, a heading that names the topic, and one
+     paragraph that says what the page explains and how many questions it asks. -->
 <header>
   <section>
-    <div class="eyebrow">example/notes · main at 4c1d9e2 · one task · no code is written</div>
-    <h1>What the app does with a deleted note</h1>
-    <p class="lede">This page explains one problem in the Notes app and the solution that I recommend. It then asks you five questions. Select one answer below each question. The page saves each answer, and I read the answers from this page.</p>
+    <div class="eyebrow">project · branch or commit · scope · state of the work</div>
+    <h1>The heading names the topic</h1>
+    <p class="lede">The first paragraph says what the page explains, how many questions it asks, and that the page saves each answer. This page is the catalog of the elements: each example says what the element is for.</p>
     <nav class="toc" aria-label="Contents">
-      <a href="#words">Words on this page</a>
-      <a href="#problem">The problem</a>
-      <a href="#solution">The solution</a>
-      <a href="#review">The review</a>
-      <a href="#changes">The code changes</a>
-      <a href="#next">The next step</a>
+      <a href="#text">Text</a>
+      <a href="#tables">Tables and tags</a>
+      <a href="#diagrams">Diagrams</a>
+      <a href="#code">Code</a>
+      <a href="#boxes">Boxes</a>
+      <a href="#mockups">Mockups</a>
+      <a href="#questions">Questions</a>
     </nav>
   </section>
 </header>
 
-<section id="words">
-  <h2>Words on this page</h2>
-  <p>Each word below has one meaning on this page.</p>
+<!-- .part with a .partname groups sections. Use it for two separate tasks on one page. A page with
+     one task needs no .part. -->
+<div class="part">
+<span class="partname">Part 1 · Elements that explain</span>
+
+<section id="text">
+  <h2>Text</h2>
+  <p>A section starts with an <code>h2</code>, which has a line above it. A paragraph is not wider than 74 characters. Inside a sentence you can use <strong>bold</strong> for a term, <code>code</code> for the name of a file or a function, and <a href="#questions">a link</a>.</p>
+  <h3>A heading of the third level</h3>
+  <p>It names one part of a section.</p>
+  <ul>
+    <li>A list without numbers is for points of equal weight.</li>
+    <li>Write each point as a complete sentence.</li>
+  </ul>
+  <ol>
+    <li>A list with numbers is for steps.</li>
+    <li>It is also for points that the user refers to in a note.</li>
+  </ol>
+  <p class="note">A note is small and muted. It is for a remark of less importance, for example how you tested something.</p>
+
+  <h3>Words on this page</h3>
+  <p>A table without a head row is a list of words. Use it when the page has more than a few special words, because the user reads the page without the context of your session.</p>
   <div class="scroll">
     <table>
       <tbody>
-        <tr><td><strong>Note</strong></td><td>One text that a person wrote in the app.</td></tr>
-        <tr><td><strong>Trash</strong></td><td>A list of deleted notes. A person can open the list and restore a note from it.</td></tr>
-        <tr><td><strong>Sync</strong></td><td>The step that copies the changes of one device to the server and to the other devices of the account.</td></tr>
+        <tr><td><strong>A special word</strong></td><td>The one meaning that the word has on this page.</td></tr>
+        <tr><td><strong>A second word</strong></td><td>One sentence that a person outside the project understands.</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<section id="problem">
-  <h2>1. The problem</h2>
-  <p>A person deletes a note with one tap. The app removes the note from the device and from the server immediately. A person who taps the wrong note cannot get it back. Three persons reported this in October.</p>
-  <figure>
-    <div class="scroll">
-      <svg viewBox="0 0 860 150" role="img" aria-label="Today a tap on Delete removes the note from the device, and the sync removes it from the server. No copy stays.">
-        <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
-        <g font-size="12.5">
-          <rect x="20" y="40" width="170" height="50" rx="4" class="s-box"/><text x="105" y="62" text-anchor="middle" fill="currentColor" font-weight="600">Note list</text><text x="105" y="78" text-anchor="middle" class="s-muted" font-size="11.5">tap on Delete</text>
-          <rect x="345" y="40" width="170" height="50" rx="4" class="s-miss"/><text x="430" y="62" text-anchor="middle" fill="currentColor" font-weight="600">Device</text><text x="430" y="78" text-anchor="middle" class="s-gonet" font-size="11.5">the note is removed</text>
-          <rect x="670" y="40" width="170" height="50" rx="4" class="s-miss"/><text x="755" y="62" text-anchor="middle" fill="currentColor" font-weight="600">Server</text><text x="755" y="78" text-anchor="middle" class="s-gonet" font-size="11.5">the note is removed</text>
-          <line x1="190" y1="65" x2="341" y2="65" class="s-arrow" stroke-width="1.6" marker-end="url(#arrow)"/>
-          <line x1="515" y1="65" x2="666" y2="65" class="s-arrow" stroke-width="1.6" marker-end="url(#arrow)"/>
-          <text x="592" y="56" text-anchor="middle" fill="currentColor">sync</text>
-          <text x="20" y="126" class="s-muted" font-size="11.5">A box with a broken line shows a place where the note no longer exists.</text>
-        </g>
-      </svg>
-    </div>
-    <figcaption>The delete call is in <code>src/notes/store.js</code>, line 88.</figcaption>
-  </figure>
-</section>
-
-<section id="solution">
-  <h2>2. The solution: a deleted note goes into the trash</h2>
-  <p>The app marks a deleted note with the time of the deletion. It does not remove the note. The note list hides each note that has this mark, and the trash shows it. The app removes a note fully when the note is in the trash for longer than a time limit.</p>
-  <figure>
-    <div class="shot" aria-hidden="true">
-      <div class="flow">
-        <div class="cell">
-          <div class="cap">1. The person deletes a note</div>
-          <div class="mock n">
-            <div class="n-bar">Notes</div>
-            <div class="n-row"><b>Shopping</b><span>Milk, bread, coffee</span></div>
-            <div class="n-row gone"><b>Ideas for the trip</b><span>The train leaves at 9:40 from the main station</span></div>
-            <div class="n-row"><b>Password hints</b><span>The first pet and the year</span></div>
-          </div>
-        </div>
-        <div class="arrow">Delete</div>
-        <div class="cell">
-          <div class="cap">2. The note is in the trash</div>
-          <div class="mock n">
-            <div class="n-bar">Notes</div>
-            <div class="n-row"><b>Shopping</b><span>Milk, bread, coffee</span></div>
-            <div class="n-row"><b>Password hints</b><span>The first pet and the year</span></div>
-            <div class="n-toast"><span>The note is in the trash.</span><b>Undo</b></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <figcaption>After a tap on Delete, the app shows a message for 5 seconds. A tap on Undo restores the note.</figcaption>
-  </figure>
-
-  <h3>What changes for a person</h3>
+<section id="tables">
+  <h2>Tables and tags</h2>
+  <p>A table is good for a comparison, for example "today" and "after the change". It is inside a <code>.scroll</code> box, so a wide table scrolls on a phone and the page stays in place. A tag is a short mark in a cell or in an option.</p>
   <div class="scroll">
     <table>
       <thead><tr><th>Situation</th><th>Today</th><th>After the change</th><th></th></tr></thead>
       <tbody>
-        <tr><td>The person deletes a note.</td><td>The note is lost.</td><td>The note goes into the trash.</td><td><span class="tag new">new</span></td></tr>
-        <tr><td>The person opens the trash and taps Restore.</td><td>Not applicable.</td><td>The note returns to the note list on all devices.</td><td><span class="tag new">new</span></td></tr>
-        <tr><td>The person searches for a word.</td><td>The search shows all notes.</td><td>The search ignores the notes in the trash.</td><td><span class="tag less">different</span></td></tr>
-        <tr><td>The person edits a note.</td><td>The note changes on all devices.</td><td>No change.</td><td><span class="tag same">same</span></td></tr>
-        <tr><td>The note is in the trash for longer than the time limit.</td><td>Not applicable.</td><td>The app removes the note fully.</td><td><span class="tag ask">question 1</span></td></tr>
+        <tr><td>A thing that the change adds.</td><td>Not applicable.</td><td>What a person can do after the change.</td><td><span class="tag new">new</span></td></tr>
+        <tr><td>A thing that becomes different or goes away.</td><td>What occurs today.</td><td>What occurs after the change.</td><td><span class="tag less">different</span></td></tr>
+        <tr><td>A thing that stays.</td><td>What occurs today.</td><td>No change.</td><td><span class="tag same">same</span></td></tr>
+        <tr><td>A thing that depends on an answer.</td><td>What occurs today.</td><td>The user decides it.</td><td><span class="tag ask">question 1</span></td></tr>
+        <tr><td>The thing that you recommend.</td><td>What occurs today.</td><td>What you recommend.</td><td><span class="tag rec">recommended</span></td></tr>
       </tbody>
     </table>
   </div>
+  <p class="note">The classes of the tags are <code>new</code> (green), <code>less</code> (red), <code>same</code> (grey), <code>ask</code> (amber) and <code>rec</code> (blue).</p>
+</section>
 
-  <fieldset class="ask" data-q="keep-time">
-    <legend>How long does a note stay in the trash?</legend>
-    <p>A longer time gives a person more days to find a mistake. It also uses more space on the server. One note uses 2 KB on average.</p>
-    <label class="opt"><input type="radio" name="keep-time" value="30d"><b>30 days. <span class="tag rec">recommended</span></b><span class="d">Most mail and file apps use this time, so a person expects it.</span></label>
-    <label class="opt"><input type="radio" name="keep-time" value="7d"><b>7 days.</b><span class="d">The trash stays small. A person who returns from a holiday can be too late.</span></label>
-    <label class="opt"><input type="radio" name="keep-time" value="forever"><b>No time limit.</b><span class="d">The app never removes a note. The person empties the trash by hand.</span></label>
-    <label class="field"><span class="lab">Your note</span><textarea></textarea></label>
-  </fieldset>
-
-  <fieldset class="ask" data-q="trash-place">
-    <legend>Where does a person open the trash?</legend>
-    <p>The app has no menu today. Each drawing shows the note list of a phone after the change.</p>
-    <div class="choices">
-      <label class="opt">
-        <div class="shot" aria-hidden="true">
-          <div class="mock n">
-            <div class="n-bar">Notes</div>
-            <div class="n-row"><b>Shopping</b><span>Milk, bread, coffee</span></div>
-            <div class="n-row"><b>Ideas for the trip</b><span>The train leaves at 9:40 from the main station</span></div>
-            <div class="n-row"><b>Password hints</b><span>The first pet and the year</span></div>
-            <div class="n-tabs"><span class="on">Notes</span><span>Trash (2)</span></div>
-          </div>
-        </div>
-        <input type="radio" name="trash-place" value="tabs"><b>Two tabs below the list. <span class="tag rec">recommended</span></b>
-        <ul class="pc">
-          <li><b class="good">Good</b><span>The person always sees the trash and the number of notes in it.</span></li>
-          <li><b class="cost">Cost</b><span>The tabs use one line of the screen. The list shows one note less.</span></li>
-        </ul>
-      </label>
-      <label class="opt">
-        <div class="shot" aria-hidden="true">
-          <div class="mock n">
-            <div class="n-bar"><svg viewBox="0 0 16 16"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Notes</div>
-            <div class="n-row"><b>Shopping</b><span>Milk, bread, coffee</span></div>
-            <div class="n-row"><b>Ideas for the trip</b><span>The train leaves at 9:40 from the main station</span></div>
-            <div class="n-row"><b>Password hints</b><span>The first pet and the year</span></div>
-            <div class="n-tabs"><span>&nbsp;</span></div>
-            <div class="n-menu"><span>All notes</span><span class="on">Trash (2)</span><span>Settings</span></div>
-          </div>
-        </div>
-        <input type="radio" name="trash-place" value="menu"><b>A new menu at the left.</b>
-        <ul class="pc">
-          <li><b class="good">Good</b><span>The list keeps its full height. The menu has space for more entries later.</span></li>
-          <li><b class="cost">Cost</b><span>The person needs two taps to open the trash. The menu is new code of approximately 80 lines.</span></li>
-        </ul>
-      </label>
+<section id="diagrams">
+  <h2>Diagrams</h2>
+  <p>A diagram is an inline <code>svg</code> in a <code>figure</code>. Use it when the relation between things is the message: which part sends what to which part, and where something fails. The classes take their colors from the page, so the diagram is correct in the light and the dark theme.</p>
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 860 160" role="img" aria-label="Three boxes in a row. An arrow goes from the first box to the second box. A broken red line goes from the second box to the third box. A thin line is below the boxes.">
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+        <g font-size="12.5">
+          <rect x="20" y="30" width="170" height="50" rx="4" class="s-box"/><text x="105" y="52" text-anchor="middle" fill="currentColor" font-weight="600">A part</text><text x="105" y="68" text-anchor="middle" class="s-muted" font-size="11.5">s-box, text s-muted</text>
+          <rect x="345" y="30" width="170" height="50" rx="4" class="s-ok"/><text x="430" y="52" text-anchor="middle" fill="currentColor" font-weight="600">A good state</text><text x="430" y="68" text-anchor="middle" class="s-okt" font-size="11.5">s-ok, text s-okt</text>
+          <rect x="670" y="30" width="170" height="50" rx="4" class="s-miss"/><text x="755" y="52" text-anchor="middle" fill="currentColor" font-weight="600">A missing part</text><text x="755" y="68" text-anchor="middle" class="s-gonet" font-size="11.5">s-miss, text s-gonet</text>
+          <line x1="190" y1="55" x2="341" y2="55" class="s-arrow" stroke-width="1.6" marker-end="url(#arrow)"/>
+          <text x="266" y="46" text-anchor="middle" fill="currentColor">s-arrow</text>
+          <line x1="515" y1="55" x2="670" y2="55" class="s-drop" stroke-width="1.6"/>
+          <text x="592" y="46" text-anchor="middle" class="s-gonet">s-drop</text>
+          <line x1="20" y1="112" x2="840" y2="112" class="s-axis"/>
+          <text x="20" y="134" class="s-muted" font-size="11.5">s-axis is a thin line, for example the axis of a time line. Write the labels in words that the text uses.</text>
+        </g>
+      </svg>
     </div>
-    <label class="field"><span class="lab">Your note</span><textarea></textarea></label>
-  </fieldset>
-
-  <fieldset class="ask" data-q="trash-actions">
-    <legend>Which actions does the trash offer?</legend>
-    <p>You can select more than one answer.</p>
-    <label class="opt"><input type="checkbox" name="trash-actions" value="restore"><b>Restore one note. <span class="tag rec">recommended</span></b><span class="d">The trash has no purpose without this action.</span></label>
-    <label class="opt"><input type="checkbox" name="trash-actions" value="delete-one"><b>Delete one note fully.</b><span class="d">A person can remove a note with private data immediately.</span></label>
-    <label class="opt"><input type="checkbox" name="trash-actions" value="empty"><b>Empty the trash.</b><span class="d">One button removes all notes in the trash. The app asks for a confirmation first.</span></label>
-    <label class="field"><span class="lab">Your note</span><textarea></textarea></label>
-  </fieldset>
-
-  <h3>A protection against a lost restore (you do not decide this)</h3>
-  <p>Two devices can change the same note at the same time. For example, one device restores a note while a second device without a connection deletes it fully. The server keeps the note in this situation, because a restore is the safer result.</p>
-  <p class="note">One reviewer found this sequence in the code. Nobody saw it on a real device.</p>
+    <figcaption>The caption says what the diagram shows and gives the source, for example the file and the line.</figcaption>
+  </figure>
 </section>
 
-<section id="review">
-  <h2>3. The review</h2>
-  <p>Two reviewer agents examined the plan. They made three remarks.</p>
-  <div class="points">
-    <article>
-      <div><h3>The search must ignore the trash</h3><p>A search that shows deleted notes surprises a person. The plan did not say what the search does.</p></div>
-      <div class="outcome"><span class="tag new">corrected</span><span>The plan now has a rule for the search.</span></div>
-    </article>
-    <article>
-      <div><h3>The trash can grow without a limit</h3><p>Without a time limit, the server keeps each deleted note.</p></div>
-      <div class="outcome"><span class="tag ask">question 1</span><span>You decide the time limit.</span></div>
-    </article>
-    <article>
-      <div><h3>The export must not include the trash</h3><p>The export writes all notes of the account into one file.</p></div>
-      <div class="outcome"><span class="tag same">no change</span><span>The export already reads only the note list.</span></div>
-    </article>
+<section id="code">
+  <h2>Code</h2>
+  <p>A code block is a <code>pre</code> with a <code>code</code> inside. The page colors a block that names its language in the class <code>language-xx</code>. <code>data-title</code> on the <code>pre</code> shows a file name above the code.</p>
+  <pre data-title="src/total.js"><code class="language-js">// Write &amp; &lt; &gt; in code as &amp;amp; &amp;lt; &amp;gt;
+function total(items) {
+  let sum = 0;
+  for (let i = 0; i &lt; items.length; i++) {
+    sum = sum + items[i].price;
+  }
+  return sum;
+}</code></pre>
+
+  <h3>Versions in tabs</h3>
+  <p><code>.tabs</code> shows one of its children at a time. Each child names its tab with <code>data-tab</code>, and the page makes the buttons. Use it to compare alternatives of the same code, for example the current code and the proposed code. The last button shows the versions side by side.</p>
+  <!-- Write only the children. The page adds the buttons. -->
+  <div class="tabs">
+    <pre data-tab="Current" data-title="src/total.js"><code class="language-js">function total(items) {
+  let sum = 0;
+  for (let i = 0; i &lt; items.length; i++) {
+    sum = sum + items[i].price;
+  }
+  return sum;
+}</code></pre>
+    <pre data-tab="Proposed" data-title="src/total.js"><code class="language-js">function total(items) {
+  return items.reduce((sum, item) =&gt; sum + item.price, 0);
+}</code></pre>
   </div>
+  <!-- An empty p with this class gets buttons that change all tabs of the page at the same time. -->
+  <p class="tabs-all"></p>
+  <p class="note">The line above is <code>&lt;p class="tabs-all"&gt;&lt;/p&gt;</code>. Its buttons change all tabs of the page. Put it at the start of a page that has many comparisons.</p>
 </section>
 
-<section id="changes">
-  <h2>4. The code changes</h2>
+<section id="boxes">
+  <h2>Boxes</h2>
+  <div class="tool">
+    <p><code>.tool</code> is a box for a block that stands apart, for example a summary or a remark that does not belong to the text around it.</p>
+  </div>
+  <!-- <details> hides content that only some readers want, for example code or a long list. -->
+  <details>
+    <summary>A folded block</summary>
+    <p><code>details</code> hides content that only some readers want. The user can ignore the details and decide from the text above them.</p>
+  </details>
+
+  <h3>File boxes</h3>
+  <p><code>.files</code> shows the code changes, with one box for each area of the code.</p>
   <div class="files">
     <div>
-      <h3>Server</h3>
+      <h3>The first area</h3>
       <ul>
-        <li><code>notes.sql</code> gets the new column <code>deleted_at</code>.</li>
-        <li><code>NotesApi.delete</code> sets the mark and does not remove the row.</li>
-        <li>A daily job removes each note that is past the time limit.</li>
+        <li>Each line names a file and says what changes in it.</li>
+        <li><code>name.ext</code> gets a new function.</li>
       </ul>
     </div>
     <div>
-      <h3>App</h3>
+      <h3>The second area</h3>
       <ul>
-        <li><code>store.js</code> hides the marked notes from the note list and from the search.</li>
-        <li><code>trash.js</code> is new. It shows the trash and its actions.</li>
+        <li><code>other.ext</code> is new.</li>
       </ul>
     </div>
     <div>
       <h3>Tests</h3>
       <ul>
-        <li>4 new tests for the server and 3 new tests in a browser.</li>
-        <li>I run each test on the old code first, and it must fail there.</li>
+        <li>The number of new tests, and what they examine.</li>
       </ul>
     </div>
   </div>
-  <details>
-    <summary>Sketch of the server code</summary>
-    <pre><code class="language-js">// NotesApi.delete: the row stays, so a restore needs no backup
-async function deleteNote(id, userId) {
-  await db.run('UPDATE notes SET deleted_at = ? WHERE id = ? AND user_id = ?', [Date.now(), id, userId]);
-  sync.notify(userId, { note: id, deleted: true });
-}</code></pre>
-  </details>
 
-  <fieldset class="ask" data-q="trash-name">
-    <legend>Which name does the app show for the trash?</legend>
-    <p>The name shows in the menu and as the title of the list. Write the name that you want.</p>
-    <label class="field"><span class="lab">Your answer</span><textarea placeholder="For example: Trash"></textarea></label>
-  </fieldset>
+  <h3>Points of a review</h3>
+  <p><code>.points</code> lists the remarks of a review. Each point has its result at the right. The page gives each point its number.</p>
+  <div class="points">
+    <article>
+      <div><h3>A remark that you corrected</h3><p>What the reviewer found, and why it is a problem.</p></div>
+      <div class="outcome"><span class="tag new">corrected</span><span>What you changed.</span></div>
+    </article>
+    <article>
+      <div><h3>A remark that needs the user</h3><p>What the reviewer found.</p></div>
+      <div class="outcome"><span class="tag ask">question 2</span><span>The user decides it.</span></div>
+    </article>
+    <article>
+      <div><h3>A remark that changes nothing</h3><p>What the reviewer found.</p></div>
+      <div class="outcome"><span class="tag same">no change</span><span>The reason.</span></div>
+    </article>
+  </div>
 </section>
 
-<section id="next">
-  <h2>5. The next step</h2>
+<section id="mockups">
+  <h2>Mockups</h2>
+  <p>A mockup is a drawing of the app, made with HTML and CSS. <code>.shot</code> is its backdrop, and <code>.mock</code> is one drawn screen. The styles of the drawn app are in the <code>style</code> of this file. They are a placeholder: on a real page, use the colors and the sizes of the real app.</p>
+  <!-- .flow shows a sequence of screens: a .cell with a .cap and a .mock, then an .arrow with the action. -->
+  <figure>
+    <div class="shot" aria-hidden="true">
+      <div class="flow">
+        <div class="cell">
+          <div class="cap">1. Before the action</div>
+          <div class="mock x">
+            <div class="x-bar">Title of the screen</div>
+            <div class="x-row"><b>The first row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The second row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The third row</b><span>A line of its content</span></div>
+          </div>
+        </div>
+        <div class="arrow">The action of the person</div>
+        <div class="cell">
+          <div class="cap">2. After the action</div>
+          <div class="mock x">
+            <div class="x-bar">Title of the screen</div>
+            <div class="x-row"><b>The first row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The third row</b><span>A line of its content</span></div>
+            <div class="x-toast"><span>A message of the app.</span><b>Undo</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><code>.flow</code> puts screens side by side with an arrow between them. On a phone the screens go below each other. The caption says in words what the drawings show.</figcaption>
+  </figure>
+</section>
+
+</div>
+
+<div class="part">
+<span class="partname">Part 2 · Elements that ask</span>
+
+<section id="questions">
+  <h2>Questions</h2>
+  <p>This section shows each type of question. On a real page, put each question directly below the content that explains it, and do not collect the questions at the end. The page gives each question its number.</p>
+
+  <!-- One answer: radio buttons. A row is a label.opt with the input, a <b> with the answer, and a span.d. -->
+  <fieldset class="ask" data-q="one-answer">
+    <legend>Which answer do you select, when only one answer is possible?</legend>
+    <p>Write here what the user needs for this decision. Each option is a row with the answer in bold and one sentence below it.</p>
+    <label class="opt"><input type="radio" name="one-answer" value="first"><b>The first answer. <span class="tag rec">recommended</span></b><span class="d">The sentence gives the reason for this answer and its result. The tag marks the answer that you recommend.</span></label>
+    <label class="opt"><input type="radio" name="one-answer" value="second"><b>The second answer.</b><span class="d">You get the <code>value</code> of the selected option back, so give each option a short value of its own.</span></label>
+    <label class="opt"><input type="radio" name="one-answer" value="third"><b>The third answer.</b><span class="d">The note field below lets the user write a variant of an answer.</span></label>
+    <label class="field"><span class="lab">Your note</span><textarea></textarea></label>
+  </fieldset>
+
+  <!-- Option cards: .choices puts the options side by side, each with a drawing at the top and
+       its good and its cost below the answer. -->
+  <fieldset class="ask" data-q="cards">
+    <legend>Where is the new button?</legend>
+    <p>Use option cards when an answer changes what a person sees. Each card draws the same screen with one difference, so that the user sees only the decision. A tap on a drawing selects its card.</p>
+    <div class="choices">
+      <label class="opt">
+        <div class="shot" aria-hidden="true">
+          <div class="mock x">
+            <div class="x-bar">Title of the screen<span class="x-btn">New</span></div>
+            <div class="x-row"><b>The first row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The second row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The third row</b><span>A line of its content</span></div>
+            <div class="x-foot"></div>
+          </div>
+        </div>
+        <input type="radio" name="cards" value="top"><b>In the bar at the top. <span class="tag rec">recommended</span></b>
+        <ul class="pc">
+          <li><b class="good">Good</b><span>The advantage of this answer, in one sentence.</span></li>
+          <li><b class="cost">Cost</b><span>The price of this answer, in one sentence.</span></li>
+        </ul>
+      </label>
+      <label class="opt">
+        <div class="shot" aria-hidden="true">
+          <div class="mock x">
+            <div class="x-bar">Title of the screen</div>
+            <div class="x-row"><b>The first row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The second row</b><span>A line of its content</span></div>
+            <div class="x-row"><b>The third row</b><span>A line of its content</span></div>
+            <div class="x-foot"><span class="x-btn">New</span></div>
+          </div>
+        </div>
+        <input type="radio" name="cards" value="bottom"><b>Below the list.</b>
+        <ul class="pc">
+          <li><b class="good">Good</b><span>The good and the cost help when each answer has a clear price.</span></li>
+          <li><b class="cost">Cost</b><span>They make a card longer, so write one sentence for each.</span></li>
+        </ul>
+      </label>
+    </div>
+    <label class="field"><span class="lab">Your note</span><textarea></textarea></label>
+  </fieldset>
+
+  <!-- More than one answer: checkboxes. -->
+  <fieldset class="ask" data-q="more-answers">
+    <legend>Which answers do you select, when more than one is possible?</legend>
+    <p>You can select more than one answer.</p>
+    <label class="opt"><input type="checkbox" name="more-answers" value="first"><b>The first answer. <span class="tag rec">recommended</span></b><span class="d">A question with checkboxes says in a sentence that more than one answer is possible.</span></label>
+    <label class="opt"><input type="checkbox" name="more-answers" value="second"><b>The second answer. <span class="tag rec">recommended</span></b><span class="d">More than one option can have the tag "recommended".</span></label>
+    <label class="opt"><input type="checkbox" name="more-answers" value="third"><b>The third answer.</b><span class="d">The result of this answer.</span></label>
+    <label class="field"><span class="lab">Your note</span><textarea></textarea></label>
+  </fieldset>
+
+  <h3>A thing that is decided (you do not decide this)</h3>
+  <p>Ask only about decisions that are open. When something is decided, say what you do and why. A heading that ends with "(you do not decide this)" makes that clear.</p>
+
+  <!-- No options: the user writes the answer. The textarea must have a placeholder. -->
+  <fieldset class="ask" data-q="text-answer">
+    <legend>Which answer do you write, when the question has no options?</legend>
+    <p>A question without options has one text field. The placeholder gives an example of an answer.</p>
+    <label class="field"><span class="lab">Your answer</span><textarea placeholder="For example: a name"></textarea></label>
+  </fieldset>
+
+  <!-- The last question asks what you do next. -->
   <fieldset class="ask" data-q="next">
     <legend>What do I do after you answered?</legend>
     <label class="opt"><input type="radio" name="next" value="plan"><b>Write the plan and show it to you.</b><span class="d">I write no code.</span></label>
     <label class="opt"><input type="radio" name="next" value="build"><b>Write the plan and the code. <span class="tag rec">recommended</span></b><span class="d">I work on a separate branch and open a pull request.</span></label>
-    <label class="opt"><input type="radio" name="next" value="stop"><b>Stop.</b><span class="d">I only keep a note about the problem.</span></label>
+    <label class="opt"><input type="radio" name="next" value="stop"><b>Stop.</b><span class="d">I only keep a note about the topic.</span></label>
     <label class="field"><span class="lab">Other instructions for me</span><textarea></textarea></label>
   </fieldset>
 </section>
+
+</div>
 
 </div>
 </body>
