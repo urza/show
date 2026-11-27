@@ -1,6 +1,6 @@
 # The build stage runs natively on the build machine and cross-compiles for the target arch.
 # AOT builds under QEMU emulation are many times slower.
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:11.0.100-resolute-aot AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:11.0-resolute-aot AS build
 ARG TARGETARCH
 ARG BUILDARCH
 # A cross build needs clang, because the SDK gives the linker a --target option that gcc does not
@@ -21,7 +21,7 @@ RUN dotnet publish -c Release -a $TARGETARCH --no-restore -o /out
 RUN mkdir /data
 
 # Chiseled runtime-deps: no shell, no package manager, non-root user by default.
-FROM mcr.microsoft.com/dotnet/runtime-deps:11.0.0-resolute-chiseled
+FROM mcr.microsoft.com/dotnet/runtime-deps:11.0-resolute-chiseled
 WORKDIR /app
 COPY --from=build /out/show .
 # Docker copies the owner of this folder to a new volume. Without --chown the volume belongs to
